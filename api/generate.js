@@ -1,8 +1,9 @@
 export default async function handler(req, res) {
   try {
-    const { prompt } = req.body;
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    const prompt = body?.prompt;
 
-    if (!prompt) {
+    if (!prompt || prompt.trim() === "") {
       return res.status(400).json({ result: "No prompt provided" });
     }
 
@@ -16,9 +17,7 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           contents: [
             {
-              parts: [
-                { text: prompt }
-              ]
+              parts: [{ text: prompt }]
             }
           ]
         })
